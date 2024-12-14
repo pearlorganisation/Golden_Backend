@@ -12,10 +12,11 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { connectToMongoDB } from "./config/connectionToMongodb.js";
 import { errorHandler, notFound } from "./utils/errorHandler.js";
+import authRouter from "./routes/AuthRoute.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ;
 
 app.use(express.json());
 
@@ -65,6 +66,7 @@ app.use("/faculty", facultyRoutes);
 app.use("/subject", subjectRoutes);
 app.use("/notes", notesRoutes);
 app.use("/bookings", bookingRouter);
+app.use("/v1/auth",authRouter)
 
 app.use(notFound);
 app.use(errorHandler);
