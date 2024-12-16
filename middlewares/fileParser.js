@@ -1,45 +1,50 @@
+import chalk from "chalk";
 import formidable from "formidable";
 
 const fileParser = (req, res, next) => {
-  const form = formidable();
+  console.log(chalk.red("File Parsing Middleware Invoked"));
 
+  // Initialize Formidable with options
+  const form = formidable({
+    multiples: true, // Allows multiple file uploads
+    maxFileSize: 10 * 1024 * 1024, // Set maximum file size to 10MB
+    keepExtensions: true, // Keep file extensions
+  });
+
+  // Parse incoming form data
   form.parse(req, (err, fields, files) => {
     if (err) {
-      console.error("Error parsing the files", err);
-      return next(err);
+      console.error("Error parsing form data:", err.message);
+      return res.status(400).json({ error: "Error parsing form data" });
     }
-    req.body = req.body || {};
 
+    // Safely process fields
+    req.body = {};
     for (const key in fields) {
       if (fields[key]) {
-        const value = fields[key][0];
-
+        const value = fields[key][0] || fields[key]; // Safely access the first item
         try {
-          req.body[key] = JSON.parse(value);
+          req.body[key] = JSON.parse(value); // Try parsing as JSON
         } catch (e) {
-          req.body[key] = value;
+          req.body[key] = value; // Default to string
         }
 
-        // Convert specific fields to numbers
+        // Convert numeric fields to numbers
         if (!isNaN(req.body[key])) {
-          // console.log("NaN");
           req.body[key] = Number(req.body[key]);
         }
       }
     }
 
-    req.files = req.files || {};
-
+    // Safely process files
+    req.files = {};
     for (const key in files) {
-      const actualFiles = files[key];
-      if (!actualFiles) break;
-
-      if (Array.isArray(actualFiles)) {
-        req.files[key] = actualFiles.length > 1 ? actualFiles : actualFiles[0];
-      } else {
-        req.files[key] = actualFiles;
+      if (files[key]) {
+        req.files[key] = Array.isArray(files[key]) ? files[key] : files[key][0];
       }
     }
+
+    // Pass control to the next middleware
     next();
   });
 };
