@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import { connectToMongoDB } from "./config/connectionToMongodb.js";
 import { errorHandler, notFound } from "./utils/errorHandler.js";
 import authRouter from "./routes/AuthRoute.js";
+import orderRouter from "./routes/orderRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -68,6 +69,7 @@ app.use("/subject", subjectRoutes);
 app.use("/notes", notesRoutes);
 app.use("/bookings", bookingRouter);
 app.use("/v1/auth",authRouter)
+app.use("/order", orderRouter)
 
 app.use(notFound);
 app.use(errorHandler);

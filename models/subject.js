@@ -13,6 +13,7 @@ const subjectSchema = new mongoose.Schema(
 
   },
   { timestamps: true }
+  
 );
 
 const Subject = mongoose.model("Subject", subjectSchema);
