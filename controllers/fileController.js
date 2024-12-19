@@ -1,6 +1,6 @@
 import addWatermark from "../utils/pdfWatermarker.js";
 import fs from "fs";
-
+const ttf ='../controllers/DelinaScript.ttf';
 export const uploadFile = async (req, res) => {
   //   try {
   //     const filePath = req.file.path;
@@ -22,11 +22,11 @@ export const downloadFile = async (req, res) => {
   try {
     const user = { name: "Shubham Mamgain" };
     const watermarkText = `Name: ${user.name}`;
-
+  
     const pdfUrl =
       "https://res.cloudinary.com/dapjyizvj/raw/upload/v1731995581/Bazar91/szw9i42udrcsfjifxwye.pdf";
 
-    const watermarkedPdfBytes = await addWatermark(pdfUrl, watermarkText);
+    const watermarkedPdfBytes = await addWatermark(pdfUrl, watermarkText, ttf);
 
     res.set({
       "Content-Type": "application/pdf",
