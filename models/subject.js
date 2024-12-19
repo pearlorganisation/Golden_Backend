@@ -8,8 +8,12 @@ const subjectSchema = new mongoose.Schema(
       public_id: { type: String, required: true },
       asset_id: { type: String, required: true },
     },
+  price:{type:Number,required:true},
+  discountedPrice:{type:Number,required:true}
+
   },
   { timestamps: true }
+  
 );
 
 const Subject = mongoose.model("Subject", subjectSchema);
