@@ -65,34 +65,34 @@ export const sendDownloadPdfMail=(email, pdfBuffer)=>{
     </div>`;
 
       const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com", // Correct Gmail SMTP host
-        port: 587, // Use port 587 for TLS
-        secure: false, // Use true for port 465 (SSL)
+        host: "smtp.gmail.com",  
+        port: 587, 
+        secure: false,  
         auth: {
-          user: process.env.NODEMAILER_EMAIL_USER, // Your Gmail address (from .env)
-          pass: process.env.NODEMAILER_EMAIL_PASS, // Your Gmail app password (from .env)
+          user: process.env.NODEMAILER_EMAIL_USER,  
+          pass: process.env.NODEMAILER_EMAIL_PASS, 
         },
       });
 
       const mailOptions = {
-        from: process.env.NODEMAILER_EMAIL_USER, // Your Gmail address
-        to: email, // Recipient's email address
-        subject, // Subject of the email
-        html, // HTML content of the email
+        from: process.env.NODEMAILER_EMAIL_USER,  
+        to: email, 
+        subject, 
+        html, 
         attachments: [{
-          filename: 'med-notes.pdf', // Name of the attached file
-          content: pdfBuffer, // PDF content as a buffer
-          contentType: 'application/pdf', // MIME type
+          filename: 'med-notes.pdf',  
+          content: pdfBuffer,  
+          contentType: 'application/pdf',
         }, ],
       };
       return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
-            console.error("Error sending email:", error); // Log the error
-            return reject(error); // Reject the promise with the error
+            console.error("Error sending email:", error);  
+            return reject(error);  
           } else {
-            console.log("Email sent successfully:", info.response); // Log success
-            return resolve("Verification Email Sent Successfully"); // Resolve the promise with success message
+            console.log("Email sent successfully:", info.response);  
+            return resolve("Verification Email Sent Successfully");  
           }
         });
       });
