@@ -10,7 +10,7 @@ export const sendUserVerificationEmail = (email, verificationToken,verificationL
 
   const html = `
     <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
-      <h1 style="color: #4CAF50;">Verify Your Account</h1>
+      <h1 style="color: #4CAF50;">Here is the link to your notes</h1>
       <p>Dear User,</p>
       <p>Thank you for signing up! Please verify your account by clicking the link below:</p>
       <p style="margin: 20px 0;">
@@ -52,3 +52,48 @@ export const sendUserVerificationEmail = (email, verificationToken,verificationL
     });
   });
 };
+
+
+/** mail to sent after purchase is verified */
+
+export const sendDownloadPdfMail=(email, pdfBuffer)=>{
+  const subject= `Here is your personalized med notes`;
+  const html = `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
+      <h1 style="color: #4CAF50;">Here is your pdf</h1>
+      <p>Dear User,</p>
+      <p>Thank you for Buying our Notes:</p>
+    </div>`;
+
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com", // Correct Gmail SMTP host
+        port: 587, // Use port 587 for TLS
+        secure: false, // Use true for port 465 (SSL)
+        auth: {
+          user: process.env.NODEMAILER_EMAIL_USER, // Your Gmail address (from .env)
+          pass: process.env.NODEMAILER_EMAIL_PASS, // Your Gmail app password (from .env)
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.NODEMAILER_EMAIL_USER, // Your Gmail address
+        to: email, // Recipient's email address
+        subject, // Subject of the email
+        html, // HTML content of the email
+        attachments: [{
+          filename: 'med-notes.pdf', // Name of the attached file
+          content: pdfBuffer, // PDF content as a buffer
+          contentType: 'application/pdf', // MIME type
+        }, ],
+      };
+      return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error("Error sending email:", error); // Log the error
+            return reject(error); // Reject the promise with the error
+          } else {
+            console.log("Email sent successfully:", info.response); // Log success
+            return resolve("Verification Email Sent Successfully"); // Resolve the promise with success message
+          }
+        });
+      });
+  }

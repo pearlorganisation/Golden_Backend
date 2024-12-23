@@ -1,6 +1,5 @@
+import { sendDownloadPdfMail } from "../utils/mail/sendMail.js";
 import addWatermark from "../utils/pdfWatermarker.js";
-import fs from "fs";
-const ttf ='../controllers/DelinaScript.ttf';
 export const uploadFile = async (req, res) => {
   //   try {
   //     const filePath = req.file.path;
@@ -22,12 +21,19 @@ export const downloadFile = async (req, res) => {
   try {
     const user = { name: "Shubham Mamgain" };
     const watermarkText = `Name: ${user.name}`;
-  
+    const email = `takermanish7@gmail.com`
     const pdfUrl =
       "https://res.cloudinary.com/dapjyizvj/raw/upload/v1731995581/Bazar91/szw9i42udrcsfjifxwye.pdf";
 
-    const watermarkedPdfBytes = await addWatermark(pdfUrl, watermarkText, ttf);
-
+    const watermarkedPdfBytes = await addWatermark(pdfUrl, watermarkText);
+    if(watermarkedPdfBytes){
+      try {
+        const result =await sendDownloadPdfMail(email, Buffer.from(watermarkedPdfBytes))
+      } catch (error) {
+        console.log(error)
+        return error
+      }
+    }
     res.set({
       "Content-Type": "application/pdf",
       "Content-Disposition": 'attachment; filename="watermarked.pdf"',
