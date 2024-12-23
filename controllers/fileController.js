@@ -24,7 +24,7 @@ export const downloadFile = async (req, res) => {
     const watermarkText = `Name: ${user.name}`;
 
     const pdfUrl =
-      "https://res.cloudinary.com/dapjyizvj/raw/upload/v1731995581/Bazar91/szw9i42udrcsfjifxwye.pdf";
+      "https://res.cloudinary.com/dapjyizvj/raw/upload/v1734943843/uploads/reev5wluktdww2c0jqd3.pdf";
 
     const watermarkedPdfBytes = await addWatermark(pdfUrl, watermarkText);
 

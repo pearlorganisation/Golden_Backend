@@ -2,6 +2,7 @@ import express from "express";
 import otpRoutes from "./routes/otp.js";
 import fileRoutes from "./routes/file.js";
 import facultyRoutes from "./routes/facultyRoute.js";
+import reviewRoutes from "./routes/reviewRoute.js";
 import subjectRoutes from "./routes/subjectRoute.js";
 import notesRoutes from "./routes/notesRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
@@ -16,7 +17,7 @@ import authRouter from "./routes/AuthRoute.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 
@@ -67,7 +68,9 @@ app.use("/faculty", facultyRoutes);
 app.use("/subject", subjectRoutes);
 app.use("/notes", notesRoutes);
 app.use("/bookings", bookingRouter);
-app.use("/v1/auth",authRouter)
+app.use("/v1/auth", authRouter);
+
+app.use("/reviews", reviewRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

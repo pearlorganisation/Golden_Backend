@@ -23,7 +23,10 @@ export const getNotesById = asyncHandler(async (req, res, next) => {
   validateMongodbID(id);
 
   const notes = await Notes.findById(id)
-    .populate({ path: "subject", select: "name banner -_id" })
+    .populate({
+      path: "subject",
+      select: "name banner -_id price discountedPrice pages description",
+    })
     .populate({ path: "faculty", select: "name institute -_id" });
 
   if (!notes) {
@@ -48,7 +51,10 @@ export const getAllNotes = asyncHandler(async (req, res, next) => {
   const notes = await Notes.find()
     .skip(skip)
     .limit(limit)
-    .populate({ path: "subject", select: "name banner -_id" })
+    .populate({
+      path: "subject",
+      select: "name banner -_id price discountedPrice pages description",
+    })
     .populate({ path: "faculty", select: "name institute -_id" });
 
   if (!notes || notes.length === 0) {
