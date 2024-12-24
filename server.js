@@ -6,6 +6,7 @@ import reviewRoutes from "./routes/reviewRoute.js";
 import subjectRoutes from "./routes/subjectRoute.js";
 import notesRoutes from "./routes/notesRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
+import reviewsRouter from "./routes/reviewRoute.js";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -14,6 +15,7 @@ import cookieParser from "cookie-parser";
 import { connectToMongoDB } from "./config/connectionToMongodb.js";
 import { errorHandler, notFound } from "./utils/errorHandler.js";
 import authRouter from "./routes/AuthRoute.js";
+import orderRouter from "./routes/orderRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -69,8 +71,9 @@ app.use("/subject", subjectRoutes);
 app.use("/notes", notesRoutes);
 app.use("/bookings", bookingRouter);
 app.use("/v1/auth", authRouter);
-
-app.use("/reviews", reviewRoutes);
+app.use("/reviews", reviewsRouter);
 
 app.use(notFound);
 app.use(errorHandler);
+
+// 436893Av761lhEbsY676a566cP1    MSG (91 ) KEY

@@ -1,4 +1,7 @@
-import { PDFDocument, rgb } from "pdf-lib";
+import {
+  PDFDocument,
+  rgb
+} from "pdf-lib";
 import fetch from "node-fetch";
 
 const addWatermark = async (pdfUrl, watermarkText) => {
@@ -8,7 +11,10 @@ const addWatermark = async (pdfUrl, watermarkText) => {
 
   const pages = pdfDoc.getPages();
   pages.forEach((page) => {
-    const { width, height } = page.getSize();
+    const {
+      width,
+      height
+    } = page.getSize();
     page.drawText(watermarkText, {
       x: width / 4,
       y: height / 2,

@@ -14,6 +14,7 @@ const subjectSchema = new mongoose.Schema(
     pages: { type: Number, required: true },
   },
   { timestamps: true }
+  
 );
 
 const Subject = mongoose.model("Subject", subjectSchema);
