@@ -80,7 +80,7 @@ export const verify = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Account successfully verified." });
 
-  // res.redirect("http://localhost:5173")
+  res.redirect("http://localhost:5173")
 });
 
 export const login = asyncHandler(async (req, res) => {
