@@ -7,13 +7,13 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 
-  export const Register = asyncHandler(async (req, res) => {
-    console.log("Incoming Request Body:", req.body); // Log for debugging
-  
-    const { name, email, phoneNumber, password } = req.body;
-  const userExixts = await User.findOne({ email });
-  if (userExixts) {
-    return res.status(400).json({ message: "user already exhists" });
+export const Register = asyncHandler(async (req, res) => {
+  console.log("Incoming Request Body:", req.body); // Log for debugging
+
+  const { name, email, phoneNumber, password } = req.body;
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(400).json({ message: "user already exists" });
   }
   //
   const user = new User({
@@ -27,7 +27,7 @@ dotenv.config();
   const verificationToken = jwt.sign(
     { userId: user._id },
     process.env.JWT_SECRET, // You need to set JWT_SECRET in your environment variables
-    { expiresIn: "1h" } // Token expires in 1 hour
+    { expiresIn: "24h" } // Token expires in 1 hour
   );
   console.log("verification token", verificationToken);
 
@@ -49,9 +49,8 @@ dotenv.config();
     user: {
       id: user._id,
       name: user.name,
-      phone:user.phoneNumber,
+      phone: user.phoneNumber,
       email: user.email,
-   
     },
   });
 });
@@ -96,17 +95,14 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   if (!user.isVerified) {
-    return res
-      .status(403)
-      .json({
-        message: "Account is not verified ,please verified your account ",
-      });
+    return res.status(403).json({
+      message: "Account is not verified ,please verified your account ",
+    });
   }
-    const isValidPassword = await user.matchPassword(password);
+  const isValidPassword = await user.matchPassword(password);
   if (!isValidPassword) {
     return res.status(401).json({ message: "Invalid credentials" }); // 401 for unauthorized
   }
-
 
   const token = jwt.sign(
     { userId: user._id, email: user.email },
@@ -125,18 +121,19 @@ export const login = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Login successfull" });
 });
 
-
-
 export const getUserProfile = asyncHandler(async (req, res) => {
   console.log("Cookies received:", req.cookies);
 
   const token =
-    req.cookies?.authToken || req.header("Authorization")?.replace("Bearer ", "");
+    req.cookies?.authToken ||
+    req.header("Authorization")?.replace("Bearer ", "");
 
   console.log("Extracted Token:", token);
 
   if (!token) {
-    return res.status(401).json({ message: "Authentication token is required!" });
+    return res
+      .status(401)
+      .json({ message: "Authentication token is required!" });
   }
 
   try {
@@ -154,7 +151,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        isVerified:user.isVerified,
+        isVerified: user.isVerified,
         // Add more profile fields if necessary
       },
     });
@@ -163,8 +160,6 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     res.status(401).json({ message: "Invalid or expired token!" });
   }
 });
-
-
 
 export const logout = asyncHandler(async (req, res) => {
   res.clearCookie("authToken", {
