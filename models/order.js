@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const orderSchema = new mongoose.Schema(
     {
-        orderId:{ type: String, required: true, unique: true},
-        name:{type: String, required: true},
-        totalPrice:{ type: Number, required: true},
-        title:{ type: String, required: true},
+        orderId:{ type: String, required: true, unique: true}, // orderid uniquely generated in the backend
+        name:{type: String, required: true}, // buyer name
+        totalPrice:{ type: Number, required: true}, // total price
+        title:{ type: String, required: true}, // the name of the pdf file
+        email:{ type:String }, // buyer email
+        mobileNumber:{type : String}, // buyer Number
 
         orderStatus:{
             type:String,
@@ -18,10 +21,10 @@ const orderSchema = new mongoose.Schema(
             default:"Unpaid",
             required: true
         },
-        razorpay_order_id:{
+        razorpayOrderId: {
             type:String,
         },
-         razorpay_payment_id: {
+         razorpayPaymentId: {
              type: String,
          },
     },
