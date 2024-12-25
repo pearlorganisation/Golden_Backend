@@ -3,8 +3,11 @@ import otpRoutes from "./routes/otp.js";
 import fileRoutes from "./routes/file.js";
 import facultyRoutes from "./routes/facultyRoute.js";
 import subjectRoutes from "./routes/subjectRoute.js";
+import authRouter from "./routes/AuthRoute.js";
 import notesRoutes from "./routes/notesRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
+import reviewsRouter from "./routes/reviewRoute.js";
+import orderRouter from "./routes/orderRoutes.js";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -12,12 +15,11 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { connectToMongoDB } from "./config/connectionToMongodb.js";
 import { errorHandler, notFound } from "./utils/errorHandler.js";
-import authRouter from "./routes/AuthRoute.js";
-import orderRouter from "./routes/orderRoutes.js";
+
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 
@@ -68,8 +70,11 @@ app.use("/faculty", facultyRoutes);
 app.use("/subject", subjectRoutes);
 app.use("/notes", notesRoutes);
 app.use("/bookings", bookingRouter);
-app.use("/v1/auth",authRouter)
-app.use("/order", orderRouter)
+app.use("/v1/auth", authRouter);
+app.use("/reviews", reviewsRouter);
+app.use("/order", orderRouter);
 
 app.use(notFound);
 app.use(errorHandler);
+
+// 436893Av761lhEbsY676a566cP1    MSG (91 ) KEY

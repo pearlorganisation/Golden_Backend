@@ -3,7 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const sendUserVerificationEmail = (email, verificationToken,verificationLink) => {
+export const sendUserVerificationEmail = (
+  email,
+  verificationToken,
+  verificationLink
+) => {
   console.log("Email:", email);
 
   const subject = "Verify Your Account";
