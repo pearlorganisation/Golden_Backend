@@ -19,19 +19,22 @@ export const uploadFile = async (req, res) => {
 
 export const downloadFile = async (req, res) => {
   try {
-    const user = { name: "Shubham Mamgain" };
+    const user = { name: "Yesu Yesu" };
     const watermarkText = `Name: ${user.name}`;
-    const email = `takermanish7@gmail.com`
+    const email = `shubhammamgain614@gmail.com`;
     const pdfUrl =
       "https://res.cloudinary.com/dapjyizvj/raw/upload/v1734943843/uploads/reev5wluktdww2c0jqd3.pdf";
 
     const watermarkedPdfBytes = await addWatermark(pdfUrl, watermarkText);
-    if(watermarkedPdfBytes){
+    if (watermarkedPdfBytes) {
       try {
-        const result =await sendDownloadPdfMail(email, Buffer.from(watermarkedPdfBytes))
+        const result = await sendDownloadPdfMail(
+          email,
+          Buffer.from(watermarkedPdfBytes)
+        );
       } catch (error) {
-        console.log(error)
-        return error
+        console.log(error);
+        return error;
       }
     }
     res.set({

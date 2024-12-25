@@ -6,14 +6,12 @@ import validateMongodbID from "../utils/validateMongodbId.js";
 
 export const createSubject = asyncHandler(async (req, res, next) => {
   const { banner } = req.files;
-  let uploadedBanner = [];
 
-  if (banner) {
-    uploadedBanner = await uploadFileToCloudinary(banner); // [{}]
-  }
+  const uploadedImages = banner ? await uploadFileToCloudinary(banner) : [];
+
   const subjectInfo = await Subject.create({
     ...req?.body,
-    banner: uploadedBanner[0],
+    banner: uploadedImages,
   });
   if (!subjectInfo) {
     return next(new ApiErrorResponse("Subject creation failed", 400));

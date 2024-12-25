@@ -2,11 +2,12 @@ import express from "express";
 import otpRoutes from "./routes/otp.js";
 import fileRoutes from "./routes/file.js";
 import facultyRoutes from "./routes/facultyRoute.js";
-import reviewRoutes from "./routes/reviewRoute.js";
 import subjectRoutes from "./routes/subjectRoute.js";
+import authRouter from "./routes/AuthRoute.js";
 import notesRoutes from "./routes/notesRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import reviewsRouter from "./routes/reviewRoute.js";
+import orderRouter from "./routes/orderRoutes.js";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -14,8 +15,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { connectToMongoDB } from "./config/connectionToMongodb.js";
 import { errorHandler, notFound } from "./utils/errorHandler.js";
-import authRouter from "./routes/AuthRoute.js";
-import orderRouter from "./routes/orderRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -72,6 +72,7 @@ app.use("/notes", notesRoutes);
 app.use("/bookings", bookingRouter);
 app.use("/v1/auth", authRouter);
 app.use("/reviews", reviewsRouter);
+app.use("/order", orderRouter);
 
 app.use(notFound);
 app.use(errorHandler);

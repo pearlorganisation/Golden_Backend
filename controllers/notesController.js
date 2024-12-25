@@ -44,7 +44,7 @@ export const getNotesById = asyncHandler(async (req, res, next) => {
 
 export const getAllNotes = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page ? req.query.page.toString() : "1");
-  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "5");
+  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "20");
   const skip = (page - 1) * limit;
 
   const totalNotes = await Notes.countDocuments();
