@@ -81,12 +81,21 @@ export const verifyPayment = asyncHandler(async (req, res) => {
       }
     );
     if(confirm.paymentStatus === "Paid"){
-      const result = await createAndSendPdfMail(pdfUrl, buyerEmail, buyerName)
-      res.status(200).json({
-      success: true,
-      message: "Payment verified successfully and a mail is sent with your pdf attached.",
-      paymentId: razorpayPaymentId,
-    });
+      try {
+         const result = await createAndSendPdfMail(pdfUrl, buyerEmail, buyerName)
+         res.status(200).json({
+           success: true,
+           message: "Payment verified successfully and a mail is sent with your pdf attached.",
+           paymentId: razorpayPaymentId,
+         });
+      } catch (error) {
+         console.error("Database update error", err.message || err);
+         return res.status(500).json({
+           success: false,
+           message: "Payment verified, but failed to update database.",
+         });
+      }
+      
     }
     console.log('-----------------order confirm is', confirm)
      

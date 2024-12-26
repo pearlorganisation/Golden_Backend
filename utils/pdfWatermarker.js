@@ -15,10 +15,16 @@ const addWatermark = async (pdfUrl, watermarkText) => {
       width,
       height
     } = page.getSize();
+    const fontSize = 36;
+
+    // Adjust coordinates for top-right corner placement
+    const x = width - fontSize * watermarkText.length * 0.6; // Approximation for text width
+    const y = height - fontSize - 10; // Offset slightly from the top
+
     page.drawText(watermarkText, {
-      x: width / 4,
-      y: height / 2,
-      size: 36,
+      x,
+      y,
+      size: fontSize,
       color: rgb(0.95, 0.1, 0.1),
       opacity: 0.8,
     });
