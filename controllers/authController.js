@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 
+/**--------------------------------signup----------------------------------- */
 export const Register = asyncHandler(async (req, res) => {
   console.log("Incoming Request Body:", req.body); // Log for debugging
 
@@ -83,6 +84,9 @@ export const verify = asyncHandler(async (req, res) => {
   res.redirect("http://localhost:5173")
 });
 
+
+
+/**------------------------------------------------------------login------------------------------------------------------------*/
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -90,6 +94,7 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({ email });
+  console.log('user data is---------------',user)
   if (!user) {
     return res.status(404).json({ message: "user not found" });
   }
@@ -117,8 +122,14 @@ export const login = asyncHandler(async (req, res) => {
     sameSite: "lax",
     maxAge: 1 * 1 * 60 * 1000,
   });
-
-  res.status(200).json({ message: "Login successfull" });
+   
+  const userData ={
+    name: user.name,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    isVerified: user.isVerified
+  }
+  res.status(200).json({ message: "Login successfull", data: userData });
 });
 
 export const getUserProfile = asyncHandler(async (req, res) => {

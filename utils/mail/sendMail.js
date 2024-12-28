@@ -96,7 +96,7 @@ export const sendDownloadPdfMail=(email, pdfBuffer)=>{
             return reject(error);  
           } else {
             console.log("Email sent successfully:", info.response);  
-            return resolve("Verification Email Sent Successfully");  
+            return resolve("WaterMarked PDF File is sent");  
           }
         });
       });

@@ -7,7 +7,7 @@ import addWatermark from "../../utils/pdfWatermarker.js";
 import  createAndSendPdfMail   from "../../utils/createWaterMarkHandle.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
-  const { price, title,buyerName,buyerNumber,buyerEmail } = req.body;
+  const { price, title , buyerName, buyerNumber, buyerEmail } = req.body;
   console.log("req", req.body);
 
   if(!price || !title || !buyerName || !buyerNumber || !buyerEmail){
@@ -47,7 +47,7 @@ export const createOrder = asyncHandler(async (req, res) => {
 });
 
 export const verifyPayment = asyncHandler(async (req, res) => {
-  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, buyerEmail, pdfUrl , buyerName} = req.body;
+  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, buyerEmail, pdfUrl , buyerName, buyerNumber} = req.body;
   console.log("ids", req.body);
 
   // if (!process.env.RAZORPAY_KEY_SECRET) {
@@ -82,20 +82,20 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     );
     if(confirm.paymentStatus === "Paid"){
       try {
-         const result = await createAndSendPdfMail(pdfUrl, buyerEmail, buyerName)
-         res.status(200).json({
-           success: true,
-           message: "Payment verified successfully and a mail is sent with your pdf attached.",
-           paymentId: razorpayPaymentId,
-         });
+         const result = await createAndSendPdfMail(pdfUrl, buyerEmail, buyerName, buyerNumber)
+          console.log('-------------the result of sending mail is', result)
       } catch (error) {
-         console.error("Database update error", err.message || err);
+         console.error("Database update error", error.message || error);
          return res.status(500).json({
            success: false,
            message: "Payment verified, but failed to update database.",
          });
       }
-      
+       res.status(200).json({
+         success: true,
+         message: "Payment verified successfully and a mail is sent with your pdf attached.",
+         paymentId: razorpayPaymentId,
+       });
     }
     console.log('-----------------order confirm is', confirm)
      
