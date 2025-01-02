@@ -6,6 +6,7 @@ import crypto from "crypto";
 import addWatermark from "../../utils/pdfWatermarker.js";
 import  createAndSendPdfMail   from "../../utils/createWaterMarkHandle.js";
 
+/** create order */
 export const createOrder = asyncHandler(async (req, res) => {
   const { price, title , buyerName, buyerNumber, buyerEmail } = req.body;
   console.log("req", req.body);
@@ -46,16 +47,10 @@ export const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
+/** verify payment */
 export const verifyPayment = asyncHandler(async (req, res) => {
   const { razorpayOrderId, razorpayPaymentId, razorpaySignature, buyerEmail, pdfUrl , buyerName, buyerNumber} = req.body;
   console.log("ids", req.body);
-
-  // if (!process.env.RAZORPAY_KEY_SECRET) {
-  //   return res.status(500).json({
-  //     success: false,
-  //     message: "Razorpay secret key not configured in environment variables.",
-  //   });
-  // }
 
   // Generate the signature using HMAC with the Razorpay secret key
   const generateSignature = crypto
@@ -106,4 +101,28 @@ export const verifyPayment = asyncHandler(async (req, res) => {
       message: "Payment verified, but failed to update database.",
     });
   }
+});
+
+
+export const getPurchaseByUser = asyncHandler(async (req, res) => {
+  const {
+    email
+  } = req.query; // Change from req.body to req.query
+  console.log('----------the email is', email);
+
+  const orders = await Order.find({
+    email
+  });
+  console.log('--------the orders are', orders);
+
+  if (!orders || orders.length === 0) {
+    return res.status(404).json({
+      message: "No Order Found"
+    });
+  }
+  res.status(200).json({
+    message: "Orders are found",
+    data: orders,
+    status: 2001
+  });
 });
