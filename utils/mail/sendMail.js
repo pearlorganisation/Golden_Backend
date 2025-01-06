@@ -60,44 +60,87 @@ export const sendUserVerificationEmail = (
 
 /** mail to sent after purchase is verified */
 
-export const sendDownloadPdfMail=(email, pdfBuffer)=>{
-  const subject= `Here is your personalized med notes`;
+// export const sendDownloadPdfMail=(email, pdfBuffer)=>{
+//   const subject= `Here is your personalized med notes`;
+//   const html = `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
+//       <h1 style="color: #4CAF50;">Here is your pdf</h1>
+//       <p>Dear User,</p>
+//       <p>Thank you for Buying our Notes:</p>
+//     </div>`;
+
+//       const transporter = nodemailer.createTransport({
+//         host: "smtp.gmail.com",  
+//         port: 587, 
+//         secure: false,  
+//         auth: {
+//           user: process.env.NODEMAILER_EMAIL_USER,  
+//           pass: process.env.NODEMAILER_EMAIL_PASS, 
+//         },
+//       });
+
+//       const mailOptions = {
+//         from: process.env.NODEMAILER_EMAIL_USER,  
+//         to: email, 
+//         subject, 
+//         html, 
+//         attachments: [{
+//           filename: 'med-notes.pdf',  
+//           content: pdfBuffer,  
+//           contentType: 'application/pdf',
+//         }, ],
+//       };
+//       return new Promise((resolve, reject) => {
+//         transporter.sendMail(mailOptions, (error, info) => {
+//           if (error) {
+//             console.error("Error sending email:", error);  
+//             return reject(error);  
+//           } else {
+//             console.log("Email sent successfully:", info.response);  
+//             return resolve("WaterMarked PDF File is sent");  
+//           }
+//         });
+//       });
+//   }
+
+export const sendDownloadPdfMail = (email, buffer, isZip) => {
+  const subject = `Here is your personalized med notes`;
   const html = `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
-      <h1 style="color: #4CAF50;">Here is your pdf</h1>
+      <h1 style="color: #4CAF50;">Here are your PDFs</h1>
       <p>Dear User,</p>
       <p>Thank you for Buying our Notes:</p>
     </div>`;
 
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",  
-        port: 587, 
-        secure: false,  
-        auth: {
-          user: process.env.NODEMAILER_EMAIL_USER,  
-          pass: process.env.NODEMAILER_EMAIL_PASS, 
-        },
-      });
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.NODEMAILER_EMAIL_USER,
+      pass: process.env.NODEMAILER_EMAIL_PASS,
+    },
+  });
 
-      const mailOptions = {
-        from: process.env.NODEMAILER_EMAIL_USER,  
-        to: email, 
-        subject, 
-        html, 
-        attachments: [{
-          filename: 'med-notes.pdf',  
-          content: pdfBuffer,  
-          contentType: 'application/pdf',
-        }, ],
-      };
-      return new Promise((resolve, reject) => {
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.error("Error sending email:", error);  
-            return reject(error);  
-          } else {
-            console.log("Email sent successfully:", info.response);  
-            return resolve("WaterMarked PDF File is sent");  
-          }
-        });
-      });
-  }
+  const mailOptions = {
+    from: process.env.NODEMAILER_EMAIL_USER,
+    to: email,
+    subject,
+    html,
+    attachments: [{
+      filename: isZip ? 'med-notes.zip' : 'med-notes.pdf',
+      content: buffer,
+      contentType: isZip ? 'application/zip' : 'application/pdf',
+    }, ],
+  };
+
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+        return reject(error);
+      } else {
+        console.log("Email sent successfully:", info.response);
+        return resolve(isZip ? "Zip file sent successfully" : "Watermarked PDF sent successfully");
+      }
+    });
+  });
+};

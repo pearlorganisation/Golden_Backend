@@ -49,9 +49,10 @@ export const createOrder = asyncHandler(async (req, res) => {
 
 /** verify payment */
 export const verifyPayment = asyncHandler(async (req, res) => {
-  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, buyerEmail, pdfUrl , buyerName, buyerNumber} = req.body;
-  console.log("ids", req.body);
-
+  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, buyerEmail, pdfUrl , buyerName, buyerNumber, isAll} = req.body;
+  // console.log("ids", req.body);
+  let pdfUrls= pdfUrl;
+  // console.log("the pdf urls are ", pdfUrls)
   // Generate the signature using HMAC with the Razorpay secret key
   const generateSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -77,7 +78,7 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     );
     if(confirm.paymentStatus === "Paid"){
       try {
-         const result = await createAndSendPdfMail(pdfUrl, buyerEmail, buyerName, buyerNumber)
+         const result = await createAndSendPdfMail(pdfUrls,isAll, buyerEmail, buyerName, buyerNumber)
           console.log('-------------the result of sending mail is', result)
       } catch (error) {
          console.error("Database update error", error.message || error);
@@ -126,3 +127,6 @@ export const getPurchaseByUser = asyncHandler(async (req, res) => {
     status: 2001
   });
 });
+
+/** buy all the pdf */
+
