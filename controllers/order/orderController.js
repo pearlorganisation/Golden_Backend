@@ -128,5 +128,5 @@ export const getPurchaseByUser = asyncHandler(async (req, res) => {
   });
 });
 
-/** buy all the pdf */
+ 
 
