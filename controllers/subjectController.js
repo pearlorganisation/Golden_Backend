@@ -47,7 +47,7 @@ export const getSubjectById = asyncHandler(async (req, res, next) => {
 
 export const getAllSubject = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page ? req.query.page.toString() : "1");
-  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "5");
+  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "");
   const skip = (page - 1) * limit;
 
   const totalSubject = await Subject.countDocuments();
