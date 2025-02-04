@@ -32,15 +32,20 @@ const waterMarkText = `Name: ${user.name}\nEmail: ${user.email}\nNumber: ${user.
               // Multiple PDFs: Add watermark and create zip
               const watermarkedPdfs = await Promise.all(pdfUrls.map((url) => addWatermark(url, waterMarkText)));
               const zip = new AdmZip();
+              console.log("the length of watermarked pdfs", watermarkedPdfs.length)
+              const batchSize = 5;
+              let result
+              for (let i = 0; i < watermarkedPdfs.length; i += batchSize) {
+                  const batch = watermarkedPdfs.slice(i, i + batchSize);
+                  const zip = new AdmZip();
+                  batch.forEach((pdfBuffer, index) => {
+                      zip.addFile(`watermarked-file-${i + index + 1}.pdf`, Buffer.from(pdfBuffer));
+                  });
 
-              watermarkedPdfs.forEach((pdfBuffer, index) => {
-                  zip.addFile(`watermarked-file-${index + 1}.pdf`, Buffer.from(pdfBuffer));
-              });
-
-              const zipBuffer = zip.toBuffer();
-
-              const result = await sendDownloadPdfMail(email, zipBuffer, true);
-              return result;
+                  const zipBuffer = zip.toBuffer();
+                  await sendDownloadPdfMail(email, zipBuffer, true);
+              }
+              return { message: "All batches sent successfully" };
           } else {
               // Single PDF: Add watermark and send directly
               const waterMarkPdfBytes = await addWatermark(pdfUrls, waterMarkText);
