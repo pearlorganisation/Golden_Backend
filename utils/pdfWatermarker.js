@@ -58,8 +58,8 @@ const addWatermark = async (pdfUrls, watermarkText) => {
 
 
     const pages = pdfDoc.getPages();
-    const fontSize = 30;
-    const lineGap = 5;
+    const fontSize = 8;
+    const lineGap = 2;
 
     pages.forEach((page) => {
       const {
@@ -67,8 +67,8 @@ const addWatermark = async (pdfUrls, watermarkText) => {
         height
       } = page.getSize();
       const lines = watermarkText.split("\n");
-      const startX = width - 600;
-      let startY = height - 20;
+      const startX = width - 580;
+      let startY = height - 10;
 
       lines.forEach((line, index) => {
         page.drawText(line, {
