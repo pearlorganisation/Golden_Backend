@@ -5,13 +5,16 @@ import { uploadFileToCloudinary } from "../utils/cloudinaryConfig.js";
 import validateMongodbID from "../utils/validateMongodbId.js";
 
 export const createSubject = asyncHandler(async (req, res, next) => {
-  const { banner } = req.files;
+  const { banner, pdf } = req.files;
 
   const uploadedImages = banner ? await uploadFileToCloudinary(banner) : [];
+
+  const uploadedPDF = pdf ? await uploadFileToCloudinary(pdf) : {};
 
   const subjectInfo = await Subject.create({
     ...req?.body,
     banner: uploadedImages,
+    pdf: uploadedPDF[0],
   });
   if (!subjectInfo) {
     return next(new ApiErrorResponse("Subject creation failed", 400));

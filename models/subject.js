@@ -13,6 +13,11 @@ const subjectSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     discountedPrice: { type: Number, required: true },
+    pdf: {
+      secure_url: { type: String, required: true },
+      public_id: { type: String, required: true },
+      asset_id: { type: String, required: true },
+    },
     pages: { type: Number, required: true },
   },
   { timestamps: true }
