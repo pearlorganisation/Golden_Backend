@@ -25,7 +25,7 @@ export const getNotesById = asyncHandler(async (req, res, next) => {
   const notes = await Notes.findById(id)
     .populate({
       path: "subject",
-      select: "name banner -_id price discountedPrice pages description pdf",
+      select: "name banner pdf -_id price discountedPrice pages description",
     })
     .populate({ path: "faculty", select: "name institute -_id" });
 
@@ -53,7 +53,7 @@ export const getAllNotes = asyncHandler(async (req, res, next) => {
     .limit(limit)
     .populate({
       path: "subject",
-      select: "name banner -_id price discountedPrice pages description pdf",
+      select: "name banner pdf -_id price discountedPrice pages description",
     })
     .populate({ path: "faculty", select: "name institute -_id" });
 
