@@ -7,7 +7,7 @@ const fileParser = (req, res, next) => {
   // Initialize Formidable with options
   const form = formidable({
     multiples: true, // Allows multiple file uploads
-    maxFileSize: 10 * 1024 * 1024, // Set maximum file size to 10MB
+    maxFileSize: 50 * 1024 * 1024, // Set maximum file size to 50MB
     keepExtensions: true, // Keep file extensions
   });
 

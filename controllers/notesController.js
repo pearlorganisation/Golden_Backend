@@ -23,7 +23,10 @@ export const getNotesById = asyncHandler(async (req, res, next) => {
   validateMongodbID(id);
 
   const notes = await Notes.findById(id)
-    .populate({ path: "subject", select: "name banner -_id" })
+    .populate({
+      path: "subject",
+      select: "name banner pdf -_id price discountedPrice pages description",
+    })
     .populate({ path: "faculty", select: "name institute -_id" });
 
   if (!notes) {
@@ -39,16 +42,46 @@ export const getNotesById = asyncHandler(async (req, res, next) => {
   });
 });
 
+export const searchNotes = asyncHandler(async (req, res, next) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return next(new ApiErrorResponse("Search query is required", 400));
+  }
+
+  const notes = await Notes.find({
+    name: { $regex: query, $options: "i" }, // Case-insensitive regex search
+  })
+    .populate({
+      path: "subject",
+      select: "name banner -_id price discountedPrice pages description",
+    })
+    .populate({ path: "faculty", select: "name institute -_id" });
+
+  if (!notes.length) {
+    return next(new ApiErrorResponse("No matching Subject found", 404));
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Notes fetched successfully",
+    data: notes,
+  });
+});
+
 export const getAllNotes = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page ? req.query.page.toString() : "1");
-  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "5");
+  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "20");
   const skip = (page - 1) * limit;
 
   const totalNotes = await Notes.countDocuments();
   const notes = await Notes.find()
     .skip(skip)
     .limit(limit)
-    .populate({ path: "subject", select: "name banner -_id" })
+    .populate({
+      path: "subject",
+      select: "name banner pdf -_id price discountedPrice pages description",
+    })
     .populate({ path: "faculty", select: "name institute -_id" });
 
   if (!notes || notes.length === 0) {

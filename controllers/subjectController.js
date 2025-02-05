@@ -5,15 +5,16 @@ import { uploadFileToCloudinary } from "../utils/cloudinaryConfig.js";
 import validateMongodbID from "../utils/validateMongodbId.js";
 
 export const createSubject = asyncHandler(async (req, res, next) => {
-  const { banner } = req.files;
-  let uploadedBanner = [];
+  const { banner, pdf } = req.files;
 
-  if (banner) {
-    uploadedBanner = await uploadFileToCloudinary(banner); // [{}]
-  }
+  const uploadedImages = banner ? await uploadFileToCloudinary(banner) : [];
+
+  const uploadedPDF = pdf ? await uploadFileToCloudinary(pdf) : {};
+
   const subjectInfo = await Subject.create({
     ...req?.body,
-    banner: uploadedBanner[0],
+    banner: uploadedImages,
+    pdf: uploadedPDF[0],
   });
   if (!subjectInfo) {
     return next(new ApiErrorResponse("Subject creation failed", 400));
@@ -49,7 +50,7 @@ export const getSubjectById = asyncHandler(async (req, res, next) => {
 
 export const getAllSubject = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page ? req.query.page.toString() : "1");
-  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "5");
+  const limit = parseInt(req.query.limit ? req.query.limit.toString() : "");
   const skip = (page - 1) * limit;
 
   const totalSubject = await Subject.countDocuments();

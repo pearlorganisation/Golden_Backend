@@ -19,7 +19,7 @@ export const createBooking = asyncHandler(async (req, res, next) => {
     receipt: `order_rcptid_${Math.floor(1000 + Math.random() * 9000)}`, // Generate unique receipt id
   };
 
-  // Create the order using Razorpay instance
+  
   try {
     const order = await razorpayInstance.orders.create(options);
     const booking = await Booking.create({
