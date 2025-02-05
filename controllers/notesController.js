@@ -42,6 +42,28 @@ export const getNotesById = asyncHandler(async (req, res, next) => {
   });
 });
 
+export const searchNotes = asyncHandler(async (req, res, next) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return next(new ApiErrorResponse("Search query is required", 400));
+  }
+
+  const notes = await Notes.find({
+    name: { $regex: query, $options: "i" },
+  });
+
+  if (!notes.length) {
+    return next(new ApiErrorResponse("No matching notes found", 404));
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Notes fetched successfully",
+    data: notes,
+  });
+});
+
 export const getAllNotes = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page ? req.query.page.toString() : "1");
   const limit = parseInt(req.query.limit ? req.query.limit.toString() : "20");
