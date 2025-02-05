@@ -59,7 +59,7 @@ export const searchNotes = asyncHandler(async (req, res, next) => {
     .populate({ path: "faculty", select: "name institute -_id" });
 
   if (!notes.length) {
-    return next(new ApiErrorResponse("No matching notes found", 404));
+    return next(new ApiErrorResponse("No matching Subject found", 404));
   }
 
   return res.status(200).json({
