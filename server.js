@@ -8,6 +8,7 @@ import notesRoutes from "./routes/notesRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import reviewsRouter from "./routes/reviewRoute.js";
 import orderRouter from "./routes/orderRoutes.js";
+import sendPdfRouter from "./routes/sendPdfRoute.js"
 import cors from "cors";
 import morgan from "morgan";
 
@@ -73,6 +74,7 @@ app.use("/bookings", bookingRouter);
 app.use("/v1/auth", authRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/order", orderRouter);
+app.use("/sendpdf", sendPdfRouter);
 
 app.use(notFound);
 app.use(errorHandler);
