@@ -50,8 +50,13 @@ export const searchNotes = asyncHandler(async (req, res, next) => {
   }
 
   const notes = await Notes.find({
-    name: { $regex: query, $options: "i" },
-  });
+    name: { $regex: query, $options: "i" }, // Case-insensitive regex search
+  })
+    .populate({
+      path: "subject",
+      select: "name banner -_id price discountedPrice pages description",
+    })
+    .populate({ path: "faculty", select: "name institute -_id" });
 
   if (!notes.length) {
     return next(new ApiErrorResponse("No matching notes found", 404));
