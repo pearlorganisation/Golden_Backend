@@ -8,7 +8,7 @@ import notesRoutes from "./routes/notesRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import reviewsRouter from "./routes/reviewRoute.js";
 import orderRouter from "./routes/orderRoutes.js";
-import sendPdfRouter from "./routes/sendPdfRoute.js"
+import sendPdfRouter from "./routes/sendPdfRoute.js";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -35,8 +35,7 @@ app.use(
           origin: [
             "http://localhost:4112",
             "http://localhost:5010",
-            "*",
-            "https://golden-frontend.vercel.app",
+            "https://goldenmednotes.in",
           ],
           credentials: true,
         }
