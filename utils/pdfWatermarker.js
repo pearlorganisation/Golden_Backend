@@ -3,7 +3,7 @@
 //   rgb
 // } from "pdf-lib";
 // import fetch from "node-fetch";
- 
+
 // const addWatermark = async (pdfUrls, watermarkText) => {
 //   const processPdf = async (pdfUrl) => {
 //     const pdfBuffer = await fetch(pdfUrl).then((res) => res.arrayBuffer());
@@ -41,12 +41,8 @@
 // };
 // export default addWatermark;
 
-import {
-  PDFDocument,
-  rgb,
-  StandardFonts
-} from 'pdf-lib';
-import fetch from 'node-fetch';
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import fetch from "node-fetch";
 
 const addWatermark = async (pdfUrls, watermarkText) => {
   const processPdf = async (pdfUrl) => {
@@ -56,16 +52,12 @@ const addWatermark = async (pdfUrls, watermarkText) => {
     // Embed the font ONCE per document
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); // Or any font you prefer
 
-
     const pages = pdfDoc.getPages();
     const fontSize = 8;
     const lineGap = 2;
 
     pages.forEach((page) => {
-      const {
-        width,
-        height
-      } = page.getSize();
+      const { width, height } = page.getSize();
       const lines = watermarkText.split("\n");
       const startX = width - 580;
       let startY = height - 10;
@@ -76,7 +68,7 @@ const addWatermark = async (pdfUrls, watermarkText) => {
           y: startY - index * (fontSize + lineGap),
           size: fontSize,
           font: helveticaFont, // Use the embedded font
-          color: rgb(0.95, 0.1, 0.1),
+          color: rgb(224, 224, 224),
           opacity: 0.8,
         });
       });
