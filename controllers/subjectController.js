@@ -26,6 +26,28 @@ export const createSubject = asyncHandler(async (req, res, next) => {
   });
 });
 
+export const searchSubjects = asyncHandler(async (req, res, next) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return next(new ApiErrorResponse("Search query is required", 400));
+  }
+
+  const notes = await Subject.find({
+    name: { $regex: query, $options: "i" },
+  });
+
+  if (!notes.length) {
+    return next(new ApiErrorResponse("No matching Subject found", 404));
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Subjects found successfully",
+    data: notes,
+  });
+});
+
 export const getSubjectById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
@@ -126,11 +148,23 @@ export const deleteSubject = asyncHandler(async (req, res, next) => {
 export const updateSubject = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  console.log(id, "update id");
-
   validateMongodbID(id);
+  let updatedData = { ...req.body };
 
-  const subject = await Subject.findByIdAndUpdate(id, data, { new: true });
+  if (req.files?.pdf) {
+    const uploadedPDF = await uploadFileToCloudinary(req.files.pdf);
+    updatedData.pdf = uploadedPDF[0];
+  }
+
+  // Handle new Banner upload if present
+  if (req.files?.banner) {
+    const uploadedImages = await uploadFileToCloudinary(req.files.banner);
+    updatedData.banner = uploadedImages;
+  }
+
+  const subject = await Subject.findByIdAndUpdate(id, updatedData, {
+    new: true,
+  });
 
   if (!subject) {
     return next(
