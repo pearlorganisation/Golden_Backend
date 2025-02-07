@@ -4,15 +4,15 @@ import Order from "../../models/order.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import crypto from "crypto";
 import addWatermark from "../../utils/pdfWatermarker.js";
-import  createAndSendPdfMail   from "../../utils/createWaterMarkHandle.js";
+import createAndSendPdfMail from "../../utils/createWaterMarkHandle.js";
 
 /** create order */
 export const createOrder = asyncHandler(async (req, res) => {
-  const { price, title , buyerName, buyerNumber, buyerEmail } = req.body;
+  const { price, title, buyerName, buyerNumber, buyerEmail } = req.body;
   console.log("req", req.body);
 
-  if(!price || !title || !buyerName || !buyerNumber || !buyerEmail){
-   return res.status(400).json({message:"Require all the details"})
+  if (!price || !title || !buyerName || !buyerNumber || !buyerEmail) {
+    return res.status(400).json({ message: "Require all the details" });
   }
   const options = {
     amount: price * 100,
@@ -23,16 +23,16 @@ export const createOrder = asyncHandler(async (req, res) => {
   try {
     const order = await razorpayInstance.orders.create(options);
     const pdfOrder = await Order.create({
-      orderId : `BID_${nanoid(6)}${Date.now()}`,
+      orderId: `BID_${nanoid(6)}${Date.now()}`,
       name: buyerName,
-      totalPrice:price,
-      title:title,
-      email:buyerEmail,
-      mobileNumber:buyerNumber,
+      totalPrice: price,
+      title: title,
+      email: buyerEmail,
+      mobileNumber: buyerNumber,
       orderStatus: "Pending",
-      paymentStatus:"Unpaid",
-      razorpayOrderId: order.id
-    })
+      paymentStatus: "Unpaid",
+      razorpayOrderId: order.id,
+    });
     res.status(200).json({
       success: true,
       message: "Razorpay order created successfully.",
@@ -49,9 +49,18 @@ export const createOrder = asyncHandler(async (req, res) => {
 
 /** verify payment */
 export const verifyPayment = asyncHandler(async (req, res) => {
-  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, buyerEmail, pdfUrl , buyerName, buyerNumber, isAll} = req.body;
+  const {
+    razorpayOrderId,
+    razorpayPaymentId,
+    razorpaySignature,
+    buyerEmail,
+    pdfUrl,
+    buyerName,
+    buyerNumber,
+    isAll,
+  } = req.body;
   // console.log("ids", req.body);
-  let pdfUrls= pdfUrl;
+  let pdfUrls = pdfUrl;
   // console.log("the pdf urls are ", pdfUrls)
   // Generate the signature using HMAC with the Razorpay secret key
   const generateSignature = crypto
@@ -71,30 +80,36 @@ export const verifyPayment = asyncHandler(async (req, res) => {
   try {
     const confirm = await Order.findOneAndUpdate(
       { razorpayOrderId },
-      {orderStatus:"Completed", paymentStatus:"Paid"},
+      { orderStatus: "Completed", paymentStatus: "Paid" },
       {
-        new: true
+        new: true,
       }
     );
-    if(confirm.paymentStatus === "Paid"){
+    if (confirm.paymentStatus === "Paid") {
       try {
-         const result = await createAndSendPdfMail(pdfUrls,isAll, buyerEmail, buyerName, buyerNumber)
-          console.log('-------------the result of sending mail is', result)
+        const result = await createAndSendPdfMail(
+          pdfUrls,
+          isAll,
+          buyerEmail,
+          buyerName,
+          buyerNumber
+        );
+        console.log("-------------the result of sending mail is", result);
       } catch (error) {
-         console.error("Database update error", error.message || error);
-         return res.status(500).json({
-           success: false,
-           message: "Payment verified, but failed to update database.",
-         });
+        console.error("Database update error", error.message || error);
+        return res.status(500).json({
+          success: false,
+          message: "Payment verified, but failed to update database.",
+        });
       }
-       res.status(200).json({
-         success: true,
-         message: "Payment verified successfully and a mail is sent with your pdf attached.",
-         paymentId: razorpayPaymentId,
-       });
+      res.status(200).json({
+        success: true,
+        message:
+          "Payment verified successfully and a mail is sent with your pdf attached.",
+        paymentId: razorpayPaymentId,
+      });
     }
-    console.log('-----------------order confirm is', confirm)
-     
+    console.log("-----------------order confirm is", confirm);
   } catch (err) {
     console.error("Database update error", err.message || err);
     return res.status(500).json({
@@ -104,29 +119,39 @@ export const verifyPayment = asyncHandler(async (req, res) => {
   }
 });
 
-
 export const getPurchaseByUser = asyncHandler(async (req, res) => {
-  const {
-    email
-  } = req.query; // Change from req.body to req.query
-  console.log('----------the email is', email);
+  const { email } = req.query; // Change from req.body to req.query
+  console.log("----------the email is", email);
 
   const orders = await Order.find({
-    email
+    email,
   });
-  console.log('--------the orders are', orders);
+  console.log("--------the orders are", orders);
 
   if (!orders || orders.length === 0) {
     return res.status(404).json({
-      message: "No Order Found"
+      message: "No Order Found",
     });
   }
   res.status(200).json({
     message: "Orders are found",
     data: orders,
-    status: 2001
+    status: 2001,
   });
 });
 
- 
+export const getAllPurchases = asyncHandler(async (req, res) => {
+  const orders = await Order.find();
+  console.log("--------the orders are", orders);
 
+  if (!orders || orders.length === 0) {
+    return res.status(404).json({
+      message: "No Order Found",
+    });
+  }
+  res.status(200).json({
+    message: "All Orders are found",
+    data: orders,
+    status: 2001,
+  });
+});

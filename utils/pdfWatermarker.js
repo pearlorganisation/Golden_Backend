@@ -68,7 +68,7 @@ const addWatermark = async (pdfUrls, watermarkText) => {
           y: startY - index * (fontSize + lineGap),
           size: fontSize,
           font: helveticaFont, // Use the embedded font
-          color: rgb(224, 224, 224),
+          color: rgb(1, 1, 1),
           opacity: 0.8,
         });
       });

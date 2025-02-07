@@ -36,7 +36,6 @@ app.use(
             "http://localhost:4112",
             "http://localhost:5010",
             "https://goldenmednotes.in",
-            "*",
           ],
           credentials: true,
         }
