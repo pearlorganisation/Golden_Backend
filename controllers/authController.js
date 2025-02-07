@@ -81,10 +81,8 @@ export const verify = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Account successfully verified." });
 
-  res.redirect("http://localhost:5173")
+  res.redirect("http://localhost:5173");
 });
-
-
 
 /**------------------------------------------------------------login------------------------------------------------------------*/
 export const login = asyncHandler(async (req, res) => {
@@ -94,7 +92,7 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({ email });
-  console.log('user data is---------------',user)
+  console.log("user data is---------------", user);
   if (!user) {
     return res.status(404).json({ message: "user not found" });
   }
@@ -122,13 +120,13 @@ export const login = asyncHandler(async (req, res) => {
     sameSite: "lax",
     maxAge: 1 * 1 * 60 * 1000,
   });
-   
-  const userData ={
+
+  const userData = {
     name: user.name,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    isVerified: user.isVerified
-  }
+    isVerified: user.isVerified,
+  };
   res.status(200).json({ message: "Login successfull", data: userData });
 });
 
@@ -184,4 +182,20 @@ export const logout = asyncHandler(async (req, res) => {
     success: true,
     message: "Logged out successfully.",
   });
+});
+
+export const getAllUsers = asyncHandler(async (req, res, next) => {
+  try {
+    const allUsers = await User.find();
+
+    if (allUsers.length == 0) {
+      return res.status(404).json({ message: "No Users Found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "All Users found for Admin", data: allUsers });
+  } catch (error) {
+    console.log(error, "My Error");
+  }
 });

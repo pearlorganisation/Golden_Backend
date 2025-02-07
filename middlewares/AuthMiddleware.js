@@ -47,3 +47,21 @@ export const verifyPermission = (roles = []) =>
 
     next();
   });
+
+
+ 
+
+  export const isAdmin = (roles = []) =>
+    asyncHandler(async (req, res, next) => {
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized. User is missing!" });
+      }
+  
+      // Check if user role matches allowed roles
+      if (roles.length && !roles.includes(req.user.role)) {
+        return res.status(403).json({ message: "Access denied. Insufficient permissions!" });
+      }
+  
+      next();
+    });
+  
