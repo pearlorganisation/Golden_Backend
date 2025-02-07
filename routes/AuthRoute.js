@@ -17,6 +17,6 @@ authRouter.route("/verify/:token").get(verify);
 authRouter.route("/profile").get(authenticateToken, getUserProfile); // Protected profile route
 authRouter.route("/logout").post(logout); // Logout route
 
-authRouter.route("/get-users").get(verify, getAllUsers);
+authRouter.route("/get-users").get(getAllUsers);
 
 export default authRouter;
