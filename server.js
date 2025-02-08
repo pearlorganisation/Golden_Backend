@@ -9,6 +9,7 @@ import bookingRouter from "./routes/bookingRoute.js";
 import reviewsRouter from "./routes/reviewRoute.js";
 import orderRouter from "./routes/orderRoutes.js";
 import sendPdfRouter from "./routes/sendPdfRoute.js";
+import adminRouter from "./routes/adminRoute.js";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -23,9 +24,9 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(morgan("dev"));
 
 app.use(
@@ -74,6 +75,7 @@ app.use("/v1/auth", authRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/order", orderRouter);
 app.use("/sendpdf", sendPdfRouter);
+app.use("/v1/admin", adminRouter);
 
 app.use(notFound);
 app.use(errorHandler);

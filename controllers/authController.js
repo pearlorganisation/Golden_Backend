@@ -9,8 +9,6 @@ dotenv.config();
 
 /**--------------------------------signup----------------------------------- */
 export const Register = asyncHandler(async (req, res) => {
-  console.log("Incoming Request Body:", req.body); // Log for debugging
-
   const { name, email, phoneNumber, password } = req.body;
   const userExists = await User.findOne({ email });
   if (userExists) {
@@ -175,7 +173,7 @@ export const logout = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/", // Match the path used when the cookie was set
+    path: "/",
   });
 
   res.status(200).json({
