@@ -159,7 +159,6 @@ export const getUserProfile = asyncHandler(async (req, res) => {
         name: user.name,
         email: user.email,
         isVerified: user.isVerified,
-        // Add more profile fields if necessary
       },
     });
   } catch (error) {
