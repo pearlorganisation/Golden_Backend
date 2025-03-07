@@ -31,7 +31,7 @@ export const Register = asyncHandler(async (req, res) => {
   console.log("verification token", verificationToken);
 
   // Create a verification link containing the token
-  const verificationLink = `http://localhost:5000/v1/auth/verify/${verificationToken}`;
+  const verificationLink = `${process.env.PROD_FRONTEND_URL}/v1/auth/verify/${verificationToken}`;
 
   // Email content
 
@@ -79,7 +79,7 @@ export const verify = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Account successfully verified." });
 
-  res.redirect("http://localhost:5173");
+  res.redirect(`${process.env.PROD_FRONTEND_URL}` / login);
 });
 
 /**------------------------------------------------------------login------------------------------------------------------------*/
@@ -116,7 +116,7 @@ export const login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: (process.env.NODE_ENV = "production"),
     sameSite: "lax",
-    maxAge: 1 * 1 * 60 * 1000,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
   const userData = {

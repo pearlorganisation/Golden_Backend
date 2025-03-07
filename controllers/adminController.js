@@ -43,7 +43,7 @@ export const adminLogin = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 3 * 60 * 60 * 1000, // 3 hours
+    maxAge: 30 * 60 * 60 * 1000, // 30 hours
   });
 
   res.status(200).json({
