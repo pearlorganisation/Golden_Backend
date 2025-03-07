@@ -54,7 +54,7 @@ export const searchNotes = asyncHandler(async (req, res, next) => {
   })
     .populate({
       path: "subject",
-      select: "name banner -_id price discountedPrice pages description",
+      select: "name banner -_id pdf price discountedPrice pages description",
     })
     .populate({ path: "faculty", select: "name institute -_id" });
 
